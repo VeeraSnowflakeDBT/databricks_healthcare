@@ -1,4 +1,9 @@
 # Databricks notebook source
+# MAGIC %md
+# MAGIC ###Diagnosis
+
+# COMMAND ----------
+
 # DBTITLE 1,Cell 1
 # MAGIC %sql
 # MAGIC
