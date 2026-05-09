@@ -1,0 +1,57 @@
+resources:
+  jobs:
+    end_to_end_healthcare_job_run:
+      name: end-to-end-healthcare-job-run
+      tasks:
+        - task_key: diagnosis_raw_injestion_task
+          notebook_task:
+            notebook_path: ../bronze/diagnosis_raw_data_ingestion.py
+            source: WORKSPACE
+        - task_key: dim_diagnosis_injestion
+          depends_on:
+            - task_key: diagnosis_raw_injestion_task
+          notebook_task:
+            notebook_path: ../silver/dim_diagnosis_ingestion.py
+            source: WORKSPACE
+        - task_key: hospitals_raw_injestion_task
+          notebook_task:
+            notebook_path: ../bronze/hospitals_raw_data_ingestion.py
+            source: WORKSPACE
+        - task_key: dim_hospitals_injestion
+          depends_on:
+            - task_key: hospitals_raw_injestion_task
+          notebook_task:
+            notebook_path: ../silver/dim_hospital_ingestion.py
+            source: WORKSPACE
+        - task_key: patients_raw_injestion_task
+          notebook_task:
+            notebook_path: ../bronze/patients_raw_data_ingestion.py
+            source: WORKSPACE
+        - task_key: dim_patient_injestion
+          depends_on:
+            - task_key: patients_raw_injestion_task
+          notebook_task:
+            notebook_path: ../silver/dim_patient_ingestion.py
+            source: WORKSPACE
+        - task_key: visit_raw_injestion_task
+          notebook_task:
+            notebook_path: ../bronze/visits_raw_data_ingestion.py
+            source: WORKSPACE
+        - task_key: fact_visit_injestion
+          depends_on:
+            - task_key: dim_diagnosis_injestion
+            - task_key: dim_hospitals_injestion
+            - task_key: dim_patient_injestion
+            - task_key: visit_raw_injestion_task
+          notebook_task:
+            notebook_path: ../silver/fact_visit_ingestion.py
+            source: WORKSPACE
+        - task_key: resubmission_analysis
+          depends_on:
+            - task_key: fact_visit_injestion
+          notebook_task:
+            notebook_path: ../gold/resubmission_analysis.py
+            source: WORKSPACE
+      queue:
+        enabled: true
+      performance_target: PERFORMANCE_OPTIMIZED

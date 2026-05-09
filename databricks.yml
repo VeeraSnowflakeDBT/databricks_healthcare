@@ -1,0 +1,18 @@
+bundle:
+  name: databricks_healthcare
+
+include:
+  - resources/*.yml
+
+targets:
+  dev:
+    default: true
+    mode: development
+    workspace:
+      host: https://adb-7405606599051163.3.azuredatabricks.net/
+
+  prod:
+    mode: production
+    workspace:
+      host: https://adb-7405606599051163.3.azuredatabricks.net/
+      root_path: /Workspace/.bundle/${bundle.name}/${bundle.target}
